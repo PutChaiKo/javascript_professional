@@ -370,8 +370,18 @@
         // UTC日期是指没有时区偏差的GMT时间
         // 一大堆就不抄录了
 // 5.4 RegExp 类型
-        var expression = / pattern / flags ;    //
-        //
+    var expression = / pattern / flags ;
+    //在语法里，pattern（模式）里应该是正则表达式
+    var pattern3 = /.at/gi;
+    // 声明一个变量为引用类型RegExp，并指向一条正则表达式。
+    // 该表达式由模式 .at 正则表达式，表示匹配at结尾的三字符
+    // gi指全局模式下不区分大写
+    // 试着传入一个字符串
+    var noFound = pattern3.test("atjfit");
+    var found = pattern3.test("hjukcat")
+    console.log(noFound);   //false
+    console.log(found);     //true
+    //例子
         /*
          * 匹配字符串中所有有at的实例
          */
@@ -387,7 +397,7 @@
          */
         var pattern3 = /.at/gi;
 
-        // 正则表达式所有的元字符必须转义
+    // 正则表达式所有的元字符必须转义
         // ( [ { \ ^ $ | ) ? * + .]}
 
             /*
@@ -400,7 +410,7 @@
              */
             var pattern3 = /\.at/gi;
 
-        //前述均为字面量方式，下述RegExp构造函数定义正则表达式
+    //前述均为字面量方式，下述RegExp构造函数定义正则表达式
             /*
              * 匹配第一个"bat"或"cat"，不区分大小写
              */
@@ -427,3 +437,31 @@
                 re = new RegExp("cat", "g");
                 re.test("catastrophe");
             }
+    // 5.4.1 RegExp实例属性
+        // 实例具有下列属性
+        var pattern1 = /\[bc\]at/i;
+        console.log(pattern1.global);           //false，g标志
+        console.log(pattern1.ignoreCase);       //true，i标志
+        console.log(pattern1.multiline);        //false，m标志
+        console.log(pattern1.lastIndex);        //0，搜索下一个匹配项的字符位置
+        console.log(pattern1.source);           //\[bc\]at，字面量字符串正则
+        console.log(pattern1.test("cat"));      //false
+
+        var pattern2 = new RegExp("\\[bc\\]at", "i");
+        console.log(pattern1.global);           //false
+        console.log(pattern1.ignoreCase);       //true
+        console.log(pattern1.multiline);        //false
+        console.log(pattern1.lastIndex);        //0
+        console.log(pattern1.source);           //\[bc\]at
+        console.log(pattern1.test("cat"));      //false
+    // 5.4.2 RegExp实例方法
+        // exec()
+        var text = "mon and dad and baby";
+        var pattern = /mon( and dad( and baby)?)?/gi;   //包含2个捕获组
+
+        var matches = pattern.exec(text);
+        console.log(matches.index); //0
+        console.log(matches.input); //mon and dad and baby，传入字符串
+        console.log(matches[0]);    //mon and dad and baby
+        console.log(matches[1]);    // and dad and baby
+        console.log(matches[2]);    // and baby

@@ -52,10 +52,10 @@
         //名词解释，构造函数
 
     // 5.4 RegExp 类型
-        var expression = / pattern / flags ;
-        //在语法里，pattern（模式）里应该是正则表达式
-        var pattern3 = /.at/gi;
-        // 声明一个变量为引用类型RegExp，并指向一条正则表达式。
-        // 该表达式由模式 .at 正则表达式，表示匹配at结尾的三字符
-        // gi指全局模式下不区分大写
-        // 试着传入一个数据
+        //正则表达式的转义及双重转义在什么时候用，有例子么？
+        // 本书着重介绍了EC3，RegExp在EC5、EC6中貌似有不少的修改？
+    // 5.4.1 RegExp实例属性
+        var pattern1 = /\[bc\]at/i;
+        console.log(pattern1.test("cat"));     //false,Chrome返回
+        console.log(pattern1.test("\[bc\]at")); //true,转义不起作用
+        console.log(pattern1.test("[bc\]at"));  //true,不能理解
