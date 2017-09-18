@@ -59,3 +59,25 @@
         console.log(pattern1.test("cat"));     //false,Chrome返回
         console.log(pattern1.test("\[bc\]at")); //true,转义不起作用
         console.log(pattern1.test("[bc\]at"));  //true,不能理解
+    // 5.4.2 RegExp实例方法
+        //书中提到
+        //IE 的 JS在非全局模式下，lastIndex属性每次也会发生变化
+        //不知道EC5、EC6有无改善
+
+        //下例中转义字符可以工作，去掉转义字符反而出问题
+        var text = "000-00-0000";
+        var pattern = /\d{3}-\d{2}-\d{4}/;
+
+        if (pattern.test(text)){
+            console.log("The pattern was matched");
+        } else {
+            console.log("wrong");
+        }       //The pattern was matched
+
+    // 5.4.3 RegExp 构造函数属性
+        var text = "this has been a short summer";
+        var pattern = /(.)hort/g;
+
+        if (pattern.test(text)){
+            console.log(RegExp.multiline);      //Chrome返回 undefined，与书中 false不同
+        }

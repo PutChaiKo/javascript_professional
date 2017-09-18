@@ -465,3 +465,180 @@
         console.log(matches[0]);    //mon and dad and baby
         console.log(matches[1]);    // and dad and baby
         console.log(matches[2]);    // and baby
+        // exec()与全局标志
+        var text = "cat, bat, sat, fat";
+        var pattern1 = /.at/;
+
+        var matches = pattern1.exec(text);
+        console.log(matches.index);         //0，匹配开始的位置
+        console.log(matches[0);            //cat，匹配到唯一的 cat
+        console.log(pattern1.lastIndex);    //0,搜索下一匹配开始的位置
+
+        matches = pattern1.exec(text);
+        console.log(matches.index);         //0，承接上文，匹配开始为0
+        console.log(matches[0]);            //cat
+        console.log(pattern1.lastIndex);    //0
+
+        var pattern2 = /.at/g;              //设置全局模式 g
+
+        var matches = pattern2.exec(text);
+        console.log(matches.index);         //0，从0位置开始匹配
+        console.log(matches[0]);            //cat，匹配到 cat
+        console.log(pattern2.lastIndex);    //3，全局模式下，下一个匹配从位置3的字符开始，也就是第一个逗号
+
+        matches = pattern2.exec(text);
+        console.log(matches.index);         //5，位置5，也就是b
+        console.log(matches[0]);            //bat
+        console.log(pattern2.lastIndex);    //8，位置8，第二个逗号
+        //IE 的 JS在非全局模式下，lastIndex属性每次也会发生变化
+
+        //test(),if语句验证输入
+        var text = "000-00-0000";
+        var pattern = /\d{3}-\d{2}-\d{4}/;
+
+        if (pattern.test(text)){
+            console.log("The pattern was matched");
+        } else {
+            console.log("wrong");
+        }   //The pattern was matched
+    // 5.4.3 RegExp 构造函数属性
+        // 属性可以从exec() test()中提取更具体的信息
+        var text = "this has been a short summer";
+        var pattern = /(.)hort/g;
+
+        /*
+         * 注意：Opera 不支持 input lastMatch lastParen multiline 属性
+         * Internet Explorer 不支持 multiline
+         */
+        if (pattern.test(text)){
+            console.log(RegExp.input);          //this has been a short summer，返回最近一次要匹配的字符串
+            console.log(RegExp.leftContext);    //this has been a ，匹配项之前的字符串
+            console.log(RegExp.rightContext);   // summer，匹配项之后的字符串
+            console.log(RegExp.lastMatch);      //short，最近一次与整个表达式匹配的字符串
+            console.log(RegExp.lastParen);      //s，最忌一次与捕获组匹配的字符串
+            console.log(RegExp.multiline);      //undefined，用于表述是否所有表达式都使用多行模式
+        }
+
+        // 短属性名
+        var text = "this has beeb a short summer";
+        var pattern = /(.)hort/g;
+
+        /*
+         * 注意：Opera 不支持 input lastMatch lastParen multiline 属性
+         * Internet Explorer 不支持 multiline
+         */
+
+        if (pattern.test(text)){
+            console.log(RegExp.$_);     //this has beeb a short summer
+            console.log(RegExp["$`"]);  //this has beeb a
+            console.log(RegExp["$&"]);  //short
+            console.log(RegExp["$+"]);  //s
+            console.log(RegExp["$*"]);  //undefined
+        }
+        // 九个捕获组属性
+        var text = "this has been a short summer";
+        var pattern = /(..)or(.)/g;
+
+        if (pattern.test(text)){
+            console.log(RegExp.$1);     //sh
+            console.log(RegExp.$2);     //t
+        }
+
+    // 5.4.4 模式的局限性
+        // 与 Perl相比哟不少不支持的特性，具体不列
+
+// 5.5 Function 类型
+    // 函数实际上是对象，Function类型的实例
+    // 函数名实际上是指向函数对象
+    // 函数声明语法定义函数
+    function sum (num1, num2) {
+        return num1 + num2;
+    }
+    // 函数表达式定义函数
+    var sum = function(num1, num2){ //function后面没有函数名
+        return num1 + num2;
+    };  //这里要有分号，因为是var
+    // Function构造函数定义函数
+    var sum = new Function("num1", "num2", "return num1 +num2");    //不推荐
+    //可以接受任意数量的参数，最后一个参数被视为函数体，其他视为函数参数。
+
+    //函数名仅仅是指针
+    function sum(num1, num2){
+        return num1 + num2;
+    }
+    console.log(sum(10,10));        //20
+
+    var anotherSum = sum;           //使用不带括号的函数名是访问函数指针
+    console.log(anotherSum(10,20)); //30
+
+    sum = null;                     //断开原变量名与所指函数的关系
+    console.log(anotherSum(10,10)); //20
+
+    // 5.5.1 没有重载
+        function addSomeNumber(num){
+            return num + 100;
+        }
+
+        function addSomeNumber(num){
+            return num + 200;
+        }
+
+        var result = addSomeNumber(100); //300
+        //后函数覆盖前函数，同下例
+        var addsomeNumber = function (num){
+            return num + 100;
+        };
+
+        addSomeNumber = function (num){
+            return num + 200;
+        };
+
+        var result = addSomeNumber(100);    //300
+
+    // 5.5.2函数声明及函数表达式
+        // 解析器会先读取函数声明，函数表达式要等到解析器执行到该代码行
+        console.log(sum(10,10));    //20
+        function sum(num1, num2){
+            return num1 + num2;
+        }
+        //换成函数表达式
+        console.log(sum (10,10));   //sum is not a function
+        var sum = function(num1, num2){
+            return num1 + num2;
+        };
+    // 5.5.3 作为值的函数
+        function callSomeFunction(someFunction, someArgument){//第一个参数以光是一个函数，另一个是传递给函数的值
+            return someFunction(someArgument);
+        }
+
+        function add10(num){
+            return mun + 10;
+        }
+
+        var result1 = callSomeFunction(add10, 10);//add10不加括号，传递的是指针
+        console.log(result1);
+
+        // 函数中返回函数
+        function createComparisonFunction(propertyName) {
+
+            return function(object1, object2){
+                var value1 = object1[propertyName];
+                var value2 = object2[propertyName];
+
+                if (value1 < value2){
+                    return -1;
+                } else if (value1 > value2){
+                    return 1;
+                } else {
+                    return 0;
+                }
+            };
+        }
+
+        var data = [{name: "Zachary", age: 28}, {name: "Nicholas", age: 29}];
+
+        data.sort(createComparisonFunction("name"));
+        console.log(data[0].name);      //Nicholas
+
+        data.sort(createComparisonFunction("age"));
+        console.log(data[0].name);      //Zachary
