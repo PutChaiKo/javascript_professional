@@ -619,14 +619,14 @@
         console.log(result1);
 
         // 函数中返回函数
-        function createComparisonFunction(propertyName) {
-
-            return function(object1, object2){
-                var value1 = object1[propertyName];
-                var value2 = object2[propertyName];
+        function createComparisonFunction(propertyName) {//通过propertyName传入"name"字符串
+            //propertyName = name;
+            return function(object1, object2){          //这两个参数自动匹配数组相邻两个数据，将if的数值返回给createComparisonFunction
+                var value1 = object1[propertyName];     //将数据1的Object类型的name属性赋予value1
+                var value2 = object2[propertyName];     //数据2的Object的name属性赋予value2
 
                 if (value1 < value2){
-                    return -1;
+                    return -1;              //将-1等返回给函数
                 } else if (value1 > value2){
                     return 1;
                 } else {
@@ -642,3 +642,82 @@
 
         data.sort(createComparisonFunction("age"));
         console.log(data[0].name);      //Zachary
+    // 5.5.4 函数内部属性
+        //函数内部有两个特殊的属性 arguments this
+        //arguments 主要是用于保存函数，拥有callee属性
+        function factorial(num){
+            if (num <= 1) {
+                return 1;
+            } else {
+                return num * factorial(num - 1)   //函数里引用自己，递归算法
+            }
+        }
+        // 在函数名字不变的前提下上述代码完全没问题
+        // 可用arguments.callee消除函数名与函数的耦合
+        function factorial(num){
+            if (num <= 1) {
+                return 1;
+            } else {
+                return num * arguments.callee(num - 1)  //这行代码代替函数本身
+            }
+        }
+
+        var trueFactorial = factorial;
+
+        factorial = function(){
+            return 0;
+        };
+
+        console.log(trueFactorial(5));  //120
+        console.log(factorial(5));      //0
+
+        // this 指的是执行函数的当前环境对象
+        window.color = "red";
+        var o = {color: "blue"};
+
+        function sayColor(){
+            console.log(this.color);
+        }
+
+        sayColor();     //"red"
+
+        o.sayColor = sayColor;  //在 o Object下创建一个变量，并将指针指向sayColor所指的函数
+        console.log(o);         //{color: "blue", sayColor: ƒ}
+        o.sayColor();           //"blue"
+
+        // 严格模式下访问 arguments.callee 会导致错误
+
+        // 5.5.5 函数属性和方法
+            // 函数的属性
+            // length prototype
+            function sayName(name){
+                console.log(name);
+            }
+
+            function sum(num1, num2){
+                return num1 + num2;
+            }
+
+            function sayHi(){
+                console.log("hi");
+            }
+                //函数希望接受的命名参数个数
+            console.log(sayName.length);    //1
+            console.log(sum.length);        //2
+            console.log(sayHi.length);      //0
+
+            //prototype
+            function sum(num1, num2){
+                return num1 + num2;
+            }
+
+            function callSum1(num1, num2){
+                return sum.apply(this, arguments);
+            }
+
+            function callSum2(num1, num2){
+                return sum.apply(this, [num1, num2]);
+            }
+
+            console.log(callSum1(10,10));  //20
+            console.log(callSum2(10,10));  //20
