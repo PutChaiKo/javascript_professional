@@ -706,18 +706,113 @@
             console.log(sum.length);        //2
             console.log(sayHi.length);      //0
 
-            //prototype
+            // prototype 在第六章详谈
+
+            // apply()方法
+            // 接收两个参数，一个是其中运行函数的作用域，一个是参数数组
             function sum(num1, num2){
                 return num1 + num2;
             }
 
             function callSum1(num1, num2){
-                return sum.apply(this, arguments);
+                console.log(this);          //window
+                console.log(arguments);     //
+                return sum.apply(this, arguments);      //传入 argument对象，参数数组[num1, num2]
             }
 
             function callSum2(num1, num2){
-                return sum.apply(this, [num1, num2]);
+                return sum.apply(this, [num1, num2]);   //直接传入参数数组
             }
 
             console.log(callSum1(10,10));  //20
             console.log(callSum2(10,10));  //20
+
+            // call()方法
+            // 使用call()方法时，传递给函数的参数必须逐个列举出来
+            function sum(num1, num2){
+                return num1 + num2;
+            }
+
+            function callSum(num1, num2){
+                return sum.call(this, num1, num2);
+            }
+
+            console.log(callSum(10,10));
+
+            // appl() call()扩充函数作用域
+            window.color = "red";
+            var o = { color: "blue" };
+
+            function sayColor(){
+                console.log(this.color);
+            }
+
+            sayColor();             //red
+
+            sayColor.call(this);    //red
+            sayColor.call(window);  //red
+            sayColor.call(o);       //blue,在 wingdow作用域调用函数，然后函数内 this对象指向 o 作用域
+
+            // bind()
+            window.color = "red";
+            var o = { color: "blue" };
+
+            function sayColor(){
+                console.log(this.color);
+            }
+            var objectSayColor = sayColor.bind(o);  //bind创建一个函数实例，将 this值 o作用域绑定传给 sayColor
+            objectSayColor();       //blue
+
+// 5.6 基本包装类型
+    var s1 = "some text";
+    var s2 = s1.substring(2);
+    //可以把 s2这一行想象为执行以下代码
+    var s1 = new String("some text");   //创建一个“引用类型值”的字符串，将变量“指针指向字符串”
+    var s2 = s1.substring(2);           //访问这个变量的属性 substring并返回位置2之后的文本给 s2
+    s1 = null;                          //s1作为“引用类型值”被销毁
+
+    //对象的生存期
+    var s1 = "some text";
+    s1.color = "red";       //为字符串 s1添加一个color属性。到下一行时被销毁
+    console.log(s1.color);  //undefined，这一行创建了新的 String对象，并不包含 color属性
+
+    // 用 Object()构造函数
+    var obj = new Object("some text");
+    console.log(obj instanceof String);     //这个值是字符串类型的的对象吗？true
+
+    var obj2 = new Object(12315);
+    console.log(obj2 instanceof Number);
+    console.log(obj2 instanceof String);
+        // 一般是这样新建一个object
+        var person = new Object();
+        person.name = "Nicholas";
+        person.age = 29;
+    //用 new调用基本包装类型的构造函数，与直接调用同名转型函数不同
+    var value = "25";
+    var number = Number(value);     //转型函数
+    console.log(typeof number);     //number
+
+    var obj = new Number(value);    //构造函数
+    console.log(typeof obj);        //object，所有引用类型值 typeof都返回 object
+
+    // 5.6.1 Boolean类型
+        var booleanObject = new Bolean(true);
+
+        //容易引起误解
+        var falseObject = new Boolean(false);
+        var result1 = falseObject && true;      //falseObject是一个对象，在布尔运算中对象会被转化为 true
+        console.log(result1);                   //true
+
+        var falseValue = false;
+        result1 = falseValue && true;
+        console.log(result);                    //false
+        // 基本类型的布尔值与引用类型的布尔值的区别
+        console.log(typeof falseObject);    //object
+        console.log(typeof falsevalue);     //boolean
+        console.log(falseObject instanceof Boolean);    //true
+        console.log(falseValue instanceof Boolean);     //false
+
+    // 5.6.2 Number类型
+        var numberObject = new Number(10);
+        numberObject.valueOf();     //返回的是数值10
+        numberObject.toString();    //返回字符串"10"

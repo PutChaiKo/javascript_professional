@@ -81,3 +81,20 @@
         if (pattern.test(text)){
             console.log(RegExp.multiline);      //Chrome返回 undefined，与书中 false不同
         }
+
+    // 5.5.5 函数属性和方法
+        // apply() call() 方法怎么使用
+
+        // 下例中 bind()的作用域是传给了哪个函数？
+        window.color = "red";
+        var o = { color: "blue" };
+
+        function sayColor(){
+            console.log(this.color);
+        }
+        var objectSayColor = sayColor.bind(o);  //传给 sayColor 还是objectSayColor
+        objectSayColor();       //blue
+
+    // 5.6 基本包装类型
+        // 工厂方法是一个需要学习的知识点吗？简单看了一下 wiki，有点难理解，而且没有 JS的示例代码，
+        // 书中应该只是引用了工厂方法这个比喻
