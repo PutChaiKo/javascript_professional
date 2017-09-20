@@ -751,7 +751,7 @@
 
             sayColor.call(this);    //red
             sayColor.call(window);  //red
-            sayColor.call(o);       //blue,在 wingdow作用域调用函数，然后函数内 this对象指向 o 作用域
+            sayColor.call(o);       //blue,在 window作用域调用函数，然后函数内 this对象指向 o 作用域
 
             // bind()
             window.color = "red";
@@ -834,6 +834,159 @@
             var text = "cat, bat, sat, fat";
             var result = text.replace("at", "ond");
             console.log(result);    //cond, bat, sat, fat
-
+                //提供正则表达式和全局标志可替换全局
             result = text.replace(/at/g, "ond");
             console.log(result);    //cond, bond, sond, fond
+                //第二个参数可应用一些特殊的字符序列
+            var text = "cat, bat, sat, fat";
+            result = text.replace(/(.at)/g, "word($1)");//at结尾的单词被替换为word(),$1为被替换的原字符
+            console.log(result);    //word(cat), word(bat), word(sat), word(fat)
+                //replace()第二个参数也可以是函数
+            function htmlEscape(text){
+                return text.replace(/[<>"&]/g, function(match, pos, originalText){//这个函数是第二个参数
+                //三个参数，模式的匹配项（即匹配字符串），模式匹配项在字符串中的位置，原始字符串
+                    switch (match) {    //这里传递进模式匹配项，也就是与模式匹配的字符串
+                        case "<":
+                            return "&lt;";
+                        case ">":
+                            return "&gt;";
+                        case "&":
+                            return "&amp;";
+                        case "\"":
+                            return "&quot;";
+                    }
+                });
+            }
+
+            console.log(htmlEscape("<p class=\"greeting\">Hello world!</p>"));
+
+            // split()
+            var colorText = "red,blue,green,yellow";
+            var colors1 = colorText.split(",");     //["red", "blue", "green", "yellow"]
+            var colors2 = colorText.split(",", 2);  //["red", "blue"]
+            var colors3 = colorText.split(/[^\,]+/);//["", ",", ",", ",", ""]
+                //两个/之间的字符串表示一个正则表达式。[^\,]表示任何非,(逗号)的字符，+表示一个或者多个。
+                //旧版IE及浏览器在未发现匹配项和捕获组情况下会各有不同，要用多做测试
+        // 7.localeCompare()方法
+            //用于比较字符串们在字母表中的排序
+            var stringValue = "yellow";
+            console.log(stringValue.localeCompare("brick"));        //1
+            console.log(stringValue.localeCompare("yellow"));       //0
+            console.log(stringValue.localeCompare("zoo"));          //-1
+                //因为不同浏览器返回不一致，比较保险的做法如下
+            function determineOrder(value) {
+                var result = stringValue.localeCompare(value);
+                if (result < 0) {
+                    console.log("The string 'yellow' come before the string '" + value + "'.");
+                } else if (result > 0) {
+                    console.log("The string 'yellow' come after the string '" + value + "'.");
+                } else {
+                    console.log("The string 'yellow' is equal the string '" + value + "'.");
+                }
+            }
+
+            determineOrder("brick");
+            determineOrder("yellow");
+            determineOrder("zoo");
+        // 8.fromCharCode()方法
+            // 接受一个或多个字符编码，转换为字符串
+            console.log(String.fromCharCode(104, 101, 108, 108, 111));   //"hello"
+        // 9.HTML 方法
+            //因尽量不使用这些方法
+
+// 5.7单体内置对象
+    // 5.7.1 Global对象
+        // 1.URI编码方法
+            var uri = "http://www.wrox.com/illegal value.htm#start";
+
+            console.log(encodeURI(uri));
+            //http://www.wrox.com/illegal%20value.htm#start
+            console.log(encodeURIComponent(uri));
+            //http%3A%2F%2Fwww.wrox.com%2Fillegal%20value.htm%23start
+
+                // encodeURI() 对应 decodeURI()
+                // encodeURIComponent() 对应 decodeURIComponent()
+            var uri = "http%3A%2F%2Fwww.wrox.com%2Fillegal%20value.htm%23start";
+            console.log(decodeURI(uri));
+            console.log(decodeURIComponent(uri));
+
+        // 2.eval()方法
+            eval("alert('hi')");
+                //等价于下述代码
+            alert("hi")
+                //执行环境与等价代码相同
+            var msg = "hello world";
+            eval("console.log(msg);")   //hello world
+                //外部调用内部定义的字符串代码
+            eval("function sayHi() { console.log('hi'); }");
+            sayHi();
+                //变量也一样
+            eval("var msg = 'hello world';");
+            console.log(msg);   //hello world
+                //eval()中的函数和变量不会被提升，只在eval()执行时被创建
+                //在严格模式下会有差别
+                //使用时需谨慎，可被用于代码注入
+        // 3.Global 对象的属性
+        // 4.window 对象
+            // Web浏览器将Grobal对象作为 window 对象的一部分来实现
+            // 因此在全局作用域声明的所有变量和函数，都是 window 对象的属性
+            var color = "red";
+            function sayColor(){
+                console.log(window.color);
+            }
+
+            window.sayColor();  //red
+                //另一种取得 Global 对象的方法是
+            var global = function(){
+                return this;
+            }();
+
+    // 5.7.2 Math 对象
+        // 1.Math 对象属性
+            //这些属性大都是数学计算中可能会使用的一些特殊值
+        // 2.min() max()方法
+            var max = Math.max(3, 54, 32, 16);
+            console.log(max);   //54
+
+            var min = Math.min(3, 54, 32, 16);
+            console.log(min);   //3
+
+            // 联用 apply() 在数组中找到最大最小值
+            var values = [1, 2, 3, 4, 5, 6, 7, 8];
+            var max = Math.max.apply(Math, values);
+                //将 Math 作为 apply() 第一个参数，设置 this 值，然后可将任意数组设置为第二个参数
+        // 3.舍入方法
+            console.log(Math.ceil(25.9));   //26
+            console.log(Math.ceil(25.5));   //26
+            console.log(Math.ceil(25.1));   //26
+
+            console.log(Math.round(25.9));  //26
+            console.log(Math.round(25.5));  //26
+            console.log(Math.round(25.1));  //25,四舍五入
+
+            console.log(Math.floor(25.9));  //25
+            console.log(Math.floor(25.5));  //25
+            console.log(Math.floor(25.1));  //25
+
+        // 4.random()方法
+            // 1-10
+            var num = Math.floor(Math.random() * 10 + 1);
+            // 2-10
+            var num = Math.floor(Math.random() * 9 + 2);
+                // 这样比较不直观，定义函数代替
+            function selectFrom(lowerValue, upperValue) {
+                var choices = upperValue - lowerValue + 1;
+                return Math.floor(Math.random() * choices + lowerValue);
+            }
+
+            var num = selectFrom(2, 10);
+            console.log(num);       //2-10
+                //函数可用于随机取出数组的值
+            var colors = ["red", "green", "blue", "yellow", "black", "purple", "brown"];
+            var color = colors[selectFrom(0, colors.length-1)];
+            console.log(color);
+        // 5.其他方法
+            //Math对象还包含一些其他方法，用于完成简单或复杂的运算
+            //包含绝对值 幂 自然对数 平方根 正弦 余弦等
+            //不同的实现方法会有不同的精度
+            
