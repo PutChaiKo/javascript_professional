@@ -43,17 +43,18 @@
             alert("Between 0 and 25, inclusive.")
             }
     /* 在实际应用中会用哪种写法比较多？ */
+    /* 多输几次发现书中的格式在函数原理上更直观 */
 
-/* 3.6.5 for-in */
+
 /* 3.6.6 label */
-/* 3.6.8 with */
-    var qs = location.search.substring(1);
-    var hostName = location.hostname;
-    var url = location.href;
-    /*作用域是啥 */
+    /* 这个语句有用么 */
 /* 3.7 函数 */
-    /* return 返回值 是否只适用于进行数值操作的函数里面
-     * return 相对于让 function() 等于某个数值，对么
-     * 为求统一和方便，return 在函数中是不是没有必要使用
-     * 或者说该何时何地使用 retune
+    /* 书中所说该做何理解
+     *
+     * 推荐的做法是要么让函数始终都返回一个值
+     * 要么永远都不要返回值。
+     * 否则，如果函数有时候返回值，有时候有不返回值，
+     * 会给调试代码带来不便。
+     *
+     * 是不是意味着每新建一个函数就要用 return; 作为函数体的结尾比较合适？
      */
