@@ -816,3 +816,115 @@
         var numberObject = new Number(10);
         numberObject.valueOf();     //返回的是数值10
         numberObject.toString();    //返回字符串"10"
+        // 返回几进制数值的字符串形式
+        var num = 10;
+        console.log(num.toString());    //10
+        console.log(num.toString(2));   //1010
+        console.log(num.toString(8));   //12
+        console.log(num.toString(10));  //10
+        console.log(num.toString(16));  //a
+
+        // toFixed()用于控制小数位
+        var num = 10.005;
+        console.log(num.toFixed(2));    //10.01字符串
+            // IE8及之前的版本处理小数位有 bug
+        // toPrecision()方法返回指数表示法\
+        // EC5 EC6似乎有不同的表示方法
+        var num = 10;
+        console.log(num.toPrecision(1));    //"1.0e+1"
+
+        var num = 99;
+        console.log(num.toPrecision(1));    //"1e+2"
+        console.log(num.toPrecision(2));    //"99"
+        console.log(num.toPrecision(3));    //"99.0"
+        // 不建议直接实例化 Number 类型，容易导致混乱
+        var numberObject = new Number(10);
+        var numberValue = 10;
+        console.log(typeof numberObject);               //object
+        console.log(typeof numberValue);                //number
+        console.log(numberObject instanceof Number);    //true
+        console.log(numberValue instanceof Number);     //false
+
+    // 5.6.3 string 类型
+        var stringObject = new String("hello world");
+        console.log(typeof stringObject);
+        // 基本型具有 length 属性
+        var stringValue = "hello world";
+        console.log(stringValue.length);    //"11"
+        // 1.字符方法
+            //charAt() charCodeAt() 访问特定字符
+            var stringValue = "hello world";
+            console.log(stringValue.charAt(1));     //"e",位置1
+            console.log(stringValue.charCodeAt(1)); //"101",字符e的字符编码
+            //EC5 还定义了一种访问单个字符的方法，IE7及更早不支持
+            console.log(stringValue[1]);            //"e"
+        // 2.字符串操作方法
+            // concat()
+            var stringValue = "hello ";
+            var result = stringValue.concat("world");
+            console.log(stringValue);   //hello
+            console.log(result);        //hello world
+            // 可传入任意数量的参数
+            var result = stringValue.concat("world", "!")
+            console.log(result);
+            // 但还是不如 + 好用
+            var result = stringValue + "world" + "!";
+            console.log(result);
+
+            //三个基于字符串创建新字符串的方法
+            var stringValue = "hello world";
+            console.log(stringValue.slice(3));          //"lo world"
+            console.log(stringValue.substring(3));      //"lo world"
+            console.log(stringValue.substr(3));         //"lo world"
+            console.log(stringValue.slice(3, 7));       //"lo w",不包含位置7的字符
+            console.log(stringValue.substring(3,7));    //"lo w"，同上
+            console.log(stringValue.substr(3,7));       //"lo worl"，返回位置3及后面共7个字符
+            //传入负数
+            console.log(stringValue.slice(-3));         //"rld"，字符串总长 11-3=8 ，相当于 slice(8)
+            console.log(stringValue.substring(-3));     //"hello world"，-3转换为 0
+            console.log(stringValue.substr(-3));        //"rld",11-3=8
+            console.log(stringValue.slice(3, -4));      //"lo w",-4转换为 7，故slice(3, 7)
+            console.log(stringValue.substring(3, -4));  //"hel",-4转换为 0，故 substring(3, 0),相当于 substring(0, 3)
+            console.log(stringValue.substr(3, -4));     //"",-4转换为 0，意思为 从位置3开始，返回 0 个字符串，故为空字符串
+        // 3.字符串位置方法
+            var stringValue = "hello world";
+            console.log(stringValue.indexOf("o"));          //4
+            console.log(strinvalue.lastIndexOf("o"));       //7
+            console.log(stringValue.indexOf("o", 6));       //7
+            console.log(stringValue.lastIndexOf("o", 6));   //4
+            // 循环调用
+            var stringValue = "Lorem ipsum dolor sit amet, consectetur adipisicing elit"
+            var positions = new Array();
+            var pos = stringValue.indexOf("e");     //返回数值
+
+            while(pos > -1){    //如果没找到则返回 -1
+                positions.push(pos);
+                pos = stringValue.indexOf("e", pos + 1);
+            }
+
+            console.log(positions);     //[3, 24, 32, 35, 52]
+        // 4.trim()方法
+            // EC5定义的该方法会创建一个字符串的副本，删除前置及后缀所有空格
+            var stringValue = " hello world ";
+            var trimmedStringValue = stringValue.trim();
+            console.log(stringValue);       //" hello world "
+            console.log(trimmedStringValue);//"hello world"
+            //某些浏览器还支持 trimLeft() trimRight()
+        // 5.字符串大小写转换方法
+            //toLowerCase()
+            //tolocaleLowerCase()
+            //toUpperCase()
+            //toLocaleUpperCase()
+            var stringValue = "hello WORLD";
+            console.log(stringValue.toLocaleUpperCase());   //HELLO WORLD
+            console.log(stringValue.toUpperCase());         //HELLO WORLD
+            console.log(stringValue.toLocaleLowerCase());   //hello world
+            console.log(stringValue.toLowerCase());         //hello world
+                //少数语言大小写转换会有特殊的规则
+                //在不知道自己的代码将在那种语言环境下运行时，使用 toLocal方法
+        // 6.字符串的模式匹配方法
+            var text = "cat, bat, sat, fat";
+            var pattern = /.at/;
+
+            //与 pattern.exec(text)相同
+            
