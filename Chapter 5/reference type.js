@@ -816,3 +816,11 @@
         var numberObject = new Number(10);
         numberObject.valueOf();     //返回的是数值10
         numberObject.toString();    //返回字符串"10"
+        // 6.字符串的模式匹配方法
+        var text = "cat, bat, sat, fat"
+        var pattren = /.at/
+
+        var matches = text.match(pattren);
+        console.log(matches.index);         //0
+        console.log(matches[0]);            //"cat"
+        console.log(pattren.lastIndex);     //0
