@@ -817,10 +817,23 @@
         numberObject.valueOf();     //返回的是数值10
         numberObject.toString();    //返回字符串"10"
         // 6.字符串的模式匹配方法
-        var text = "cat, bat, sat, fat"
-        var pattren = /.at/
+            // match() 方法
+            var text = "cat, bat, sat, fat"
+            var pattren = /.at/
 
-        var matches = text.match(pattren);
-        console.log(matches.index);         //0
-        console.log(matches[0]);            //"cat"
-        console.log(pattren.lastIndex);     //0
+            var matches = text.match(pattren);
+            console.log(matches.index);         //0
+            console.log(matches[0]);            //"cat"
+            console.log(pattren.lastIndex);     //0
+            // match()方法返回一个数组，["cat", index: 0, input: "cat, bat, sat, fat"]
+            // search()方法
+            var text = "cat, bat, sat, fat";
+            var pos = text.search(/at/);
+            console.log(pos);   //1
+            // replace()方法
+            var text = "cat, bat, sat, fat";
+            var result = text.replace("at", "ond");
+            console.log(result);    //cond, bat, sat, fat
+
+            result = text.replace(/at/g, "ond");
+            console.log(result);    //cond, bond, sond, fond
