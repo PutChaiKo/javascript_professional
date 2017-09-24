@@ -213,12 +213,12 @@
             var person2 = createPerson("Greg", 27 "Doctor");
 
         // 6.2.2 构造函数模式
-            function Person(name, age, job)
+            function Person(name, age, job)     // 构造函数以大写字母首写以示区分
             {
                 this.name = name;
                 this.age = age;
                 this.job = job;
-                this,sayName = function()
+                this.sayName = function()
                 {
                     console.log(this.name);
                 };
@@ -227,4 +227,216 @@
             var person1 = new Person("Nicholas", 29, "Software Engineer");
             var person2 = new Person("Greg", 27, "Doctor");
 
-            
+            // 两个对象都有构造函数属性
+            console.log(person1.constructor == Person);      // true
+            console.log(person2.constructor == Person);      // true
+
+            // instanceof 操作符检测
+            console.log(person1 instanceof Object); // true
+            console.log(person1 instanceof Person); // true
+            console.log(person2 instanceof Object); // true
+            console.log(person2 instanceof Person); // true
+
+            // 1. 将构造函数当作函数
+                // 构造函数用法
+                var person = new Person("Nicholas", 29, "Software Engineer");
+                person.sayName();   // Nicholas
+                // 作为普通函数调用
+                Person("Greg", 27, "Doctor");
+                window.sayName();
+                // 在另一对象作用域调用
+                var o = {};
+                Person.call(o, "Kristen", 25, "Nurse");
+                o.sayName();    // Kristen
+            // 2.构造函数的问题
+                // 每个方法都要在每个实例创建一遍
+                console.log(person1.sayName === person2.sayName);   // false
+                // 可将函数定义转移到外部
+                function Person(name, age, job)
+                {
+                    this.name = name;
+                    this,age = age;
+                    this.job = job;
+                    this.sayName = sayName;
+                }
+
+                function sayName()
+                {
+                    console.log(this.name);
+                }
+
+                var person1 = new Person("Nicholas", 29, "Software Engineer");
+                var person2 = new Person("Greg", 27, "Doctor");
+
+        // 6.2.3 原型模式
+            // 原型属性 prototype
+            function Person(){}
+            Person.prototype.name = "Nicholas";
+            Person.prototype.age = 29;
+            Person.prototype.job = "Software Engineer";
+            Person.prototype.sayName = function()
+            {
+                console.log(this.name);
+            };
+
+            var person1 = new Person();
+            person1.sayName();
+
+            var person2 = new Person();
+            person2.sayName();
+
+            console.log(person1.sayName === person2.sayName);
+
+            // 1.理解原型对象
+                // isPrototypeOf() 确定对象之间指针指向
+                console.log(Person.prototype.isPrototypeOf(person1));   // true
+                console.log(Person.prototype.isPrototypeOf(person2));   // true
+
+                // EC5 Object.getPrototypeOf() 新方法
+                console.log(Object.getPrototypeOf(person1) === Person.prototype); // true
+                console.log(Object.getPrototypeOf(person1).name);   // "Nicholas"
+
+                // 可以访问但不能重写原型的值
+                function Person(){}
+                    Person.prototype.name = "Nicholas";
+                    Person.prototype.age = 29;
+                    Person.prototype.job = "Software Engineer";
+                    Person.prototype.sayName = function()
+                    {
+                        console.log(this.name);
+                    };
+
+                var person1 = new Person();
+                var person2 = new Person();
+
+                person1.name = "Greg";
+                console.log(person1.name);  // "Greg"
+                console.log(person2.name);  // "Nicholas"
+
+                // delete 操作法可以删除实例属性，访问原型属性
+                delete person1.name;
+                console.log(person1.name);  // "Nicholas"
+
+                // hasOwnProperty() 方法检测属性和存在于实例或原型
+                function Person(){}
+                    Person.prototype.name = "Nicholas";
+                    Person.prototype.age = 29;
+                    Person.prototype.job = "Software Engineer";
+                    Person.prototype.sayName = function()
+                    {
+                        console.log(this.name);
+                    };
+
+                var person1 = new Person();
+                var person2 = new Person();
+
+                console.log(person1.hasOwnProperty("name"));    // false
+
+                person1.name = "Greg";
+                console.log(person1.name);      // "Greg"
+                console.log(person1.hasOwnProperty("name"));    // true
+
+                console.log(person2.name);      // "Nicholas"
+                console.log(person2.hasOwnProperty("name"));    // false
+
+                delete person1.name;
+                console.log(person1.name);      // "Nicholas"
+                console.log(person1.hasOwnProperty("name"));    // false
+
+            // 2.原型与 in 操作符
+                function Person(){}
+                Person.prototype.name = "Nicholas";
+                Person.prototype.age = 29;
+                Person.prototype.job = "Software Engineer";
+                Person.prototype.sayName = function()
+                {
+                    console.log(this.name);
+                };
+
+                var person1 = new Person();
+                var person2 = new Person();
+
+                console.log(person1.hasOwnProperty("name"));    // false
+                console.log("name" in person1);     // true
+
+                person1.name = "Greg";
+                console.log(person1.name);  // Greg
+                console.log(person1.hasOwnProperty("name"));    // true
+                console.log("name" in person1);     // true
+
+                console.log(person2.name);  // Nicholas
+                console.log(person2.hasOwnProperty("name"));    // false
+                console.log("name" in person2);     // true
+
+                delete person1.name;
+                console.log(person1.name);  // Nicholas
+                console.log(person1.hasOwnProperty("name"));    // false
+                console.log("name" in person1);     // true
+                // 只要能访问到 name 属性 in 操作符就会返回 true
+                // hasOwnProperty() 只要属性存在于实例上时才会返回 true
+
+                // 可根据上述原理定义函数
+                function hasPrototypeProperty(object, name)     // 传入对象名与字符串形式属性名
+                {
+                    return !object.hasOwnProperty(name) && (name in object);
+                }   // 函数返回 true 即可证明属性是存在于原型之中
+
+                // 例子
+                function Person(){}
+                Person.prototype.name = "Nicholas";
+                Person.prototype.age = 29;
+                Person.prototype.job = "Software Engineer";
+                Person.prototype.sayName = function()
+                {
+                    console.log(this.name);
+                };
+
+                var person = new Person();
+                console.log(hasPrototypeProperty(person, "name"));  // true
+
+                person.name = "Greg";
+                console.log(hasPrototypeProperty(person, "name"));  // false
+
+                // for-in 循环 枚举属性
+                var o =
+                {
+                    toString : function()
+                    {
+                        return "My Object"
+                    }
+                };
+
+                for (var prop in o)
+                {
+                    if (prop === "toString")
+                    {
+                        console.log("Found toString");      // 在 IE8 及更早版本不会显示
+                    }
+                }
+
+                // Object.key() 方法
+                function Person(){}
+                Person.prototype.name = "Nicholas";
+                Person.prototype.age = 29;
+                Person.prototype.job = "Software Engineer";
+                Person.prototype.sayName = function()
+                {
+                    console.log(this.name);
+                };
+                // 该方法接受一个对象为参数，返回一个可枚举属性的字符串数组
+                var keys = Object.keys(Person.prototype);   // 传入 Person 的原型
+                console.log(keys);  // ["name", "age", "job", "sayName"]
+
+                var p1 = new Person();
+                p1.name = "Rob";
+                p1.age = 31;
+                var P1keys = Object.keys(p1);
+                console.log(p1keys);    // ["name", "age"]
+
+                var p2 = new Person();
+                var p2keys = Object.keys(p2);
+                console.log(p2keys);    // []
+
+                // getOwnPropertyName() 方法获取包括不可枚举属性在内所有属性
+                var keys = Object.getOwnPropertyNames(Person.prototype);
+                console.log(keys);  // ["constructor", "name", "age", "job", "sayName"]

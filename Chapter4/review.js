@@ -11,8 +11,10 @@
     /* 4.2 执行环境 作用域 */
         var color = "blue";
 
-        function changeColor(){
-            if (color == "blue") {  //如果变量为某值
+        function changeColor()
+        {
+            if (color == "blue")
+            {  //如果变量为某值
                 color = "red";      //则将外部变量修改为 red
             } else {                //如果不为某值
                 color = "blue";     //则将外部变量修改为 blue
@@ -37,10 +39,12 @@
         // 函数的活动对象 将被作为作用域链开端的变量对象
 
         /* 4.2.1 延长作用域链 */
-            function buildUrl() {
+            function buildUrl()
+            {
                 var qs = "?debug=true";
 
-                with(location){             /*Location 对象是 Window 对象的一个部分 */
+                with(location)
+                {             /*Location 对象是 Window 对象的一个部分 */
                     var url = href + qs;     /*此处 href引用的是 location.href */
                 }
                 return url;
@@ -58,11 +62,14 @@
 
             var color = "yellow";
 
-            function getColor() {
+            function getColor()
+            {
                 var color = "red";          /*如何获取这个环境的变量值 "red"？ */
-                function getColorInside(){
+                function getColorInside()
+                {
                     var color = "black";
-                    function getColorInInside(){
+                    function getColorInInside()
+                    {
                         var color = "blue";
                         return color;
                     }
@@ -78,7 +85,8 @@
                 /* 例子，如何绕过局部变量 */
                 var color = "yellow";
 
-                function getColor() {
+                function getColor()
+                {
                     var color = "red";      /*声明赋值局部变量 */
                     return window.color;    /*访问全局变量 */
                 }
@@ -90,11 +98,14 @@
                 /* 如下例 */
                 var color = "yellow";
 
-                function getColor() {
+                function getColor()
+                {
                     var color = "red";          /*如何获取这个环境的变量值 "red"？ */
-                    function getColorInside(){
+                    function getColorInside()
+                    {
                         var color = "black";
-                        function getColorInInside(){
+                        function getColorInInside()
+                        {
                             var color = "blue";
                             return getColorInside.color;
                         }
@@ -114,7 +125,8 @@
     /* 4.3.2 引用计数 */
         /* 还是属性的问题,首先帮我看一下我在函数右边的注释是不是对的 */
         /* 循环引用 */
-        function problem(){
+        function problem()
+        {
             var objectA = new Object();
             var objectB = new Object();
 
