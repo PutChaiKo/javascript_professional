@@ -24,7 +24,7 @@
         };
 
         // 6.1.1 属性类型
-            // EC5定义了特性（attribute）用于描述属性（property ）的特征
+            // EC5定义了特性（attribute）用于描述属性（property）的特征
 
             // 1.数据属性
                 // 普通对象
@@ -627,3 +627,105 @@
 
             var colors = new SpecialArray("red", "blue", "green");
             console.log(colors.toPipedString());     // red|blue|green
+        // 6.2.7 稳妥构造函数
+            // 没有公共属性，方法不引用 this 的对象
+            // 与寄生构造韩式类似但不同，不用 this 和 new
+            function Person(name, age, job)
+            {
+                // 创建要返回的对象
+                var o = new Object();
+
+                // 可以在此定义私有变量和函数
+
+                // 添加方法
+                o.sayName = function()
+                {
+                    console.log(name);
+                };
+                // 返回对象
+                return o;
+            }
+
+            var friend = Person("Nicholas", 29, "Software Engineer");
+            friend.sayName();   // Nicholas
+
+    // 6.3 继承
+        // 接口继承和实现继承 JS只有实现继承
+
+        // 6.3.1 原型链
+            function SuperType()    // 定义类型 1
+            {
+                this.property = true;   // 设置属性为 true
+            }
+
+            SuperType.prototype.getSuperValue = function()  // 设置类型 1 方法
+            {
+                return this.property;   // 返回 property 属性的布尔值，false
+            };
+
+            function SubType()      // 定义类型 2
+            {
+                this.subproperty = false;   // 属性为 false
+            }
+
+            // 继承了SubType
+            SubType.prototype = new SuperType(); // 将类型 2 的原型指向类型 1 的原型
+
+            SubType.prototype.getSubValue = function()  // 设置类型 2 的方法
+            {
+                return this.subproperty;    // 返回 subproperty 的值 false
+            };
+
+            var instance = new SubType();
+            console.log(instance.getSuperValue());  // true
+            console.log(instance.getSubValue());    // false
+
+            // 1. 默认的原型
+                // SubType 继承了 SuperType，而 SuperType 继承了 Object.
+                // 当调用 instance.toString() 时，实际上调用的是保存在 Object.prototype 上的方法
+
+            // 2.确认原型和实例的关系
+                // instanceof 操作符
+                console.log(instance instanceof Object);    // true
+                console.log(instance instanceof SuperType); // true
+                console.log(instance instanceof SubType);   // true
+
+                // isPrototypeOf() 方法
+                console.log(Object.prototype.isPrototypeOf(instance));      // true
+                console.log(SuperType.prototype.isPrototypeOf(instance));   // true
+                console.log(SubType.prototype.isPrototypeOf(instance));     // true
+
+            // 3.谨慎地定义方法
+                // 给原型添加代码一定要放在替换原型的语句之后
+                function SuperType()
+                {
+                    this.property = true
+                }
+
+                SuperType.prototype.getSuperValue = function()
+                {
+                    return this.property;
+                };
+
+                function SubType()
+                {
+                    this.subproperty = false;
+                }
+
+                // 继承了 SuperType
+                SubType.prototype = new SuperType();
+
+                // 添加新方法
+                SubType.prototype.getSubValue = function()
+                {
+                    return this.subproperty;
+                };
+
+                // 重写超类型中的方法
+                SubType.prototype.getSubValue = function()
+                {
+                    return false;
+                };
+
+                var instance = new SubType();
+                console.log(instance.getSuperValue());      // false
