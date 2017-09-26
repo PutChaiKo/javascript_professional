@@ -902,3 +902,62 @@
 
             // EC5 的 Object.create()方法，用于规范原型继承
             // 接受两个参数，用作新对象原型，为新对象定义额外属性的对象
+            // 传入一个参数的情况下，Object.create() 与前述 object() 相同
+            // 第二个参数
+            var person =
+            {
+                name : "Nicholas",
+                friends : ["Shelby", "Court", "Van"]
+            };
+            var anotherPerson = Object.create(person, {
+                name :
+                {
+                    value : "Greg"
+                }
+            });
+            console.log(anotherPerson.name);    // Greg
+
+        // 6.3.5 寄生式继承
+            function createAnother(original)
+            {
+                var clone = object(original);   // 通过调用前例函数来创建新对象
+                clone.sayHi = function()        // 以某种方式增强该对象
+                {
+                    console.log("hi");          // 返回对象给函数
+                };
+                return clone;
+            }
+
+            // 可以这样用
+            var person =
+            {
+                name : "Nicholas",
+                friends : ["Shelby", "Court", "Van"]
+            };
+
+            var anotherPerson = createAnother(person);
+            anotherPerson.sayHi();      // hi
+
+        // 6.3.6 寄生组合式继承
+            // 组合继承具有调用两次草类型的构造函数的缺点
+            function SuperType(name)
+            {
+                this.name = name;
+                this.colors = ["red", "blue", "green"];
+            }
+            SuperType.prototype.sayname = function()
+            {
+                console.log(this.name);
+            };
+            function SubType(name, age)
+            {
+                SuperType.call(this, name);     // 第二次调用 SuperType()
+                this.age = age;
+            }
+
+            SubType.prototype = new SuperType();    // 第一次调用 SuperType()
+            SubType.prototype.constructor = SubType;
+            SubType.prototype.sayAge = function()
+            {
+                console.log(this.age);
+            };
