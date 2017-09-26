@@ -729,3 +729,176 @@
 
                 var instance = new SubType();
                 console.log(instance.getSuperValue());      // false
+
+                // 对象字面量创建函数原型将会重写原型链
+                function SuperType()
+                {
+                    this.property = true;
+                }
+
+                SuperType.prototype.getSuperValue = function()
+                {
+                    return this.property;
+                };
+
+                function SubType()
+                {
+                    this.subproperty = false;
+                }
+
+                // 继承
+                SubType.prototype = new SuperType();
+
+                // 使用字面量添加新方法，会使上一行代码无效
+                SubType.prototype =
+                {
+                    getSubValue : function()
+                    {
+                        return this.subproperty;
+                    },
+
+                    someOtherMethod : function()
+                    {
+                        return false;
+                    }
+                };
+
+                var instance = new SubType();
+                console.log(instance.getSubValue());    // false
+                console.log(instance.getSuperValue());  // error
+
+            // 4.原型链的问题
+                function SuperType()
+                {
+                    this.colors = ["red", "blue", "green"];
+                }
+
+                function SubType(){}
+
+                // 继承
+                SubType.prototype = new SuperType();
+
+                var instance1  = new SubType();
+                instance1.colors.push("black");
+                console.log(instance1.colors);  // ["red", "blue", "green", "black"]
+
+                var instance2 = new SubType();
+                console.log(instance2.colors);  // ["red", "blue", "green", "black"]
+
+        // 6.3.2 借用构造函数
+            function SuperType()
+            {
+                this.colors = ["red", "blue", "green"];
+            }
+
+            function SubType()
+            {
+                // 继承SuperType
+                SuperType.call(this);   // 只有在创建新实例的时候才调用这个函数
+            }
+
+            var instance1 = new SubType();
+            instance1.colors.push("black");
+            console.log(instance1.colors);  // ["red", "blue", "green", "black"]
+
+            var instance2 = new SubType();  // 每个实例会有自己的 color 副本
+            console.log(instance2.colors);  // ["red", "blue", "green"]
+
+            // 1. 传递参数
+                // 借用构造函数的优势
+                // 可在子类型构造函数向超类型构造函数传递参数
+                function SuperType(name)
+                {
+                    this.name = name;
+                }
+
+                function SubType()
+                {
+                    // 继承了 SuperType ，同时传递参数
+                    SuperType.call(this, "Nicholas");
+
+                    // 实例属性
+                    this.age = 29;
+                }
+
+                var instance = new SubType();
+                console.log(instance.name);     // Nicholas
+                console.log(instance.age);      // 29
+
+            // 2.借用构造函数的问题
+                // 无法函数复用
+                // 超类型原型定义的方法对子类型不可见
+
+        // 6.3.3 组合继承
+            // 原型链和借用构造函数的组合
+            // 在原型上定义方法实现函数的复用
+            // 又能保证每个实例有自己的属性
+            function SuperType(name)
+            {
+                this.name = name;
+                this.colors = ["red", "blue", "green"];
+            }
+
+            SuperType.prototype.sayName = function()
+            {
+                console.log(this.name);
+            };
+
+            function SubType(name, age)
+            {
+
+                // 继承属性
+                SuperType.call(this, name);
+
+                // 实例属性
+                this.age = age;
+            }
+
+            // 继承方法
+            SubType.prototype = new SuperType();
+
+            // 构造函数属性，用于纠正用此函数创建的实例的 constructor 属性指向
+            SubType.prototype.constructor = SubType;
+            SubType.prototype.sayAge = function()   //  实例方法
+            {
+                console.log(this.age);
+            };
+
+            var instance1 = new SubType("Nicholas", 29);
+            instance1.colors.push("black");
+            console.log(instance1.colors);  // ["red", "blue", "green", "black"]
+            instance1.sayName();    // Nicholas
+            instance1.sayAge();     // 29
+
+            var instance2 = new SubType("Greg", 27);
+            console.log(instance2.colors);  // ["red", "blue", "green"]
+            instance2.sayName();    // Greg
+            instance2.sayAge();     // 27
+
+        // 6.3.4 原型式继承
+            // 对传入其中的对象进行一次浅复制
+            function object(o)      // 传入对象 o
+            {
+                function F(){}      // 创建临时性构造函数
+                F.prototype = o;    // 传入对象 o 作为作为临时构造函数原型
+                return new F();     // 返回临时类型的一个新实例
+            }
+
+            // 例子
+            var person =
+            {
+                name : "Nicholas",
+                friends : ["Shelby", "Court", "Van"]
+            };
+            var anotherPerson = object(person);
+            anotherPerson.name = "Linda";
+            anotherPerson.friends.push("Rob");
+            var yetAnothherPerson = object(person);
+            yetAnothherPerson.name = "Linda";
+            yetAnothherPerson.friends.push("Barbie");
+
+            // 引用类型值是共享的
+            console.log(person.friends);    // ["Shelby", "Court", "Van", "Rob", "Barbie"]
+
+            // EC5 的 Object.create()方法，用于规范原型继承
+            // 接受两个参数，用作新对象原型，为新对象定义额外属性的对象
