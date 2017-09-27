@@ -961,3 +961,34 @@
             {
                 console.log(this.age);
             };
+
+            // 寄生组合式继承
+            function inheritPrototype(SubType, SuperType)   // 参数：子类型构造函数和超类型构造函数
+            {
+                var prototype = object(SuperType.prototype);    // 创建超类型的一个副本
+                prototype.constructor = SubType;    // 为副本添加 constructor 属性指向 SubType
+                SubType.prototype = prototype;      // 将副本对象赋值给子类型的原型
+            }
+
+            function SuperType(name)    // 新建超类型对象，传入参数 name
+            {
+                this.name = name;   // 属性 name 接受传入参数赋值
+                this.colors = ["red", "blue", "green"]; // 超类型自带数组 colors
+            }
+
+            SuperType.prototype.sayName = function()    // 超类型的方法 sayName
+            {
+                console.log(this.name);
+            };
+
+            function SubType(name, age)     // 新建子类型，两个参数传入
+            {
+                SuperType.call(this, name); // 继承类型原型，同时传递参数
+                this.age = age;             // 子类型自带属性，由 age 传入
+            }
+
+            inheritPrototype(SubType, SuperType);   // 寄生式继承，将超类型原型副本继承给子类型
+            SubType.prototype.sayAge0 = function()  // 子类型新建方法
+            {
+                console.log(this.age);
+            }
