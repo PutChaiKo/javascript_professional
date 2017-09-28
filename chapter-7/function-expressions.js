@@ -128,15 +128,15 @@
             }
         }
 
-    // 闭包
+    // 7.2 闭包
         // 指有权访问另一个函数作用域中的变量
         // 常见为函数内部创建另一个函数
-        function createComparisonFunction(propertyName)
+        function createComparisonFunction(propertyName)     // 传入属性对象的属性名的字符串
         {
-            return function(object1, object2)
+            return function(object1, object2)   // 传入相邻的两个属性对象
             {
-                var value1 = object1[propertyName];
-                var value2 = object2[propertyName];
+                var value1 = object1[propertyName];     // 赋值，取的是函数外部的外部对象的属性的属性
+                var value2 = object2[propertyName];     // 取值赋值
                 if (value1 < value2)
                 {
                     return -1;
@@ -150,4 +150,71 @@
                     return 0;
                 }
             };
+        }
+
+        // 作用域链
+         function compare(value1, value2)
+         {
+             if (value1 < value2)
+             {
+                 return -1;
+             }
+             else if (value1 > value2)
+             {
+                return 1;
+             }
+             else
+             {
+                 return 0;
+             }
+         }
+
+         var result = compare(5, 10);
+
+         // 闭包
+         //  创建函数
+         var compare = createComparisonFunction("name");
+
+         //  调用函数
+         var result = compare({name : "Nicholas"}, {name : "Greg"});
+
+        //  解除对匿名函数的引用（以便释放内存）
+        compare = null;
+
+        //  7.2.1 闭包与变量
+        function createComparisonFunction()
+        {
+            var result = new Array();
+            for (var i = 0; i < 10; i++)    // i 保存在 createComparisonFunction 的作用域中
+            {                               //
+                result[i] = function()
+                {
+                    return i;
+                };
+            }
+            return result;      // for 循环生成一个函数数组并返回至 createComparisonFunction
+        }
+
+        var iFunc = createComparisonFunction();
+        console.log(iFunc);     // [ƒ, ƒ, ƒ, ƒ, ƒ, ƒ, ƒ, ƒ, ƒ, ƒ]
+        var iFuncNum = createComparisonFunction()[0];   // 将第一个函数取出
+        console.log(iFuncNum);  // 是匿名函数 function(){return i;}
+        console.log(iFuncNum());    // 10，将函数运行，i 存在于被销毁的函数 createComparisonFunction 的活动对象里
+
+        // 强行让闭包函数符合预期
+        function createFunction()
+        {
+            var result = [];
+
+            for (var i = 0; i < 10; i++)
+            {
+                result[i] = function(num)
+                {
+                    return function()
+                    {
+                        return num;
+                    };
+                }(i);
+            }
+            return result;
         }
