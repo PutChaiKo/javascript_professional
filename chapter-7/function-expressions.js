@@ -379,3 +379,186 @@
                 return privateFunction();
             }
         }
+
+        // 特权方法可以隐藏那些不应该直接修改的数据
+        function Person(name)
+        {
+            this.getName = function()   // 用闭包方法可以访问函数的私有参数
+            {
+                return name;
+            };
+            this.setName = function(value)
+            {
+                name = value;
+            };
+        }
+        var person = new Person("Nicholas");
+        console.log(person.getName());
+        person.setName("Greg");
+        console.log(person.getName());
+
+        var person2 = new Person("Adm")     // 新创建的变量指向的原型与之前的不同
+        console.log(person.getName());      // Greg
+        console.log(person2.getName());     // Adm
+
+        // 7.4.1 静态私有变量
+            (function(){
+
+                // 私有变量和私有函数
+                var privateVariable = 10;
+                function privateFunction()
+                {
+                    return false;
+                }
+
+                // 构造函数
+                MyObject = function(){};        // 缺少 var 函数表达式创建全局变量
+
+                // 公有/特权方法
+                MyObject.prototype.publicMethod = function()
+                {
+                    privateVariable++;
+                    return privateFunction();
+                };
+            })();
+
+            // 例
+            (function()
+            {
+                var name = "";
+                Person = function(value)
+                {
+                    name = value;
+                };
+                Person.prototype.getName = function()
+                {
+                    return name;
+                };
+                Person.prototype.setName = function(value)
+                {
+                    name = value;
+                };
+            })();
+
+            var person1 = new Person("Nicholas");
+            console.log(person1.getName());     // Nicholas
+            person1.setName("Greg");
+            console.log(person1.getName());     // Greg
+
+            var person2 = new Person("Michael");    // 新创建的变量指向的原型与之前相同，利于共享变量、方法和参数
+            console.log(person1.getName());     // Michael
+            console.log(person2.getName());     // Michael
+
+        // 7.4.2 模块模式
+            // 一种为单例创建室友变量和特权方法的模式
+            // 下面是单例
+            var singleton =
+            {
+                name : value,
+                method : function()
+                {
+                    // 这里是方法代码
+                }
+            };
+
+            // 模块模式通过添加私有变量和特权方法增强单例
+            var singleton = function()
+            {
+                // 私有变量和私有函数
+                var privateVariable = 10;   // 外部无法访问，但保存在函数内部
+                function privateFunction()
+                {
+                    return false;
+                }
+                // 特权/公有方法
+                return {    // 将这个对象返回到函数本身
+                    publicProperty : true,      // 可在外部访问的函数的属性
+                    publicMethod : function()   // 可在外部访问的函数公有方法，而且因为存在闭包，可以访问函数的私有变量和函数
+                    {
+                        privateVariable++;  // 私有变量加1，并保存在函数里
+                        return privateFunction();   // 运行一次私有函数，并将结果 false 返回到公有方法里
+                    }
+                };
+            }();
+
+            console.log(singleton.publicMethod());      // false，同时函数保存的 privateVariable 值变为11
+
+            //
+            var application = function()
+            {
+                // 私有变量和函数
+                var components = [];    // 声明一个私有数组
+
+                // 初始化
+                components.push(new BaseComponent());   // 为其添加新实例
+
+                // 公共
+                return {
+                    getComponentCount : function()      // 访问私有数组，获取已注册的组件数目
+                    {
+                        return component.length;
+                    },
+                     registerComponent : function()     // 为数组传入添加新实例
+                    {
+                        if (typeof component == "object")   // 检测其类型是否为对象
+                        {
+                            components.push(component);
+                        }
+                    }
+                };
+            }();
+
+        // 7.4.3 增强的模块模式
+            var singlenton = function()
+            {
+                // 私有变量和私有函数
+                var privateVariable = 10;
+                function privateFunction()
+                {
+                    return false;
+                }
+
+                // 创建对象
+                var object = new CustomType();
+
+                // 添加特权/公有属性和方法
+                object.publicProperty = true;
+                object.publicMethos = function()
+                {
+                    return privateFunction();
+                };
+
+                // 返回这个对象
+                return object;
+            }();
+
+            // 修改前述例子
+            var application = function()
+            {
+                // 私有变量和方法
+                var components = [];
+
+                // 初始化
+                components.push(new BaseComponent());
+
+                // 创建 application 的一个局部副本
+                var app = new BaseComponent();
+
+                // 公共接口
+                app.getComponentcount = function()
+                {
+                    return components.length;
+                };
+                app.registerComponent = function(component)
+                {
+                    if (typeof component == "object")
+                    {
+                        components.push(component);
+                    }
+                };
+
+                // 返回这个副本
+                return app;
+            }();
+
+            
