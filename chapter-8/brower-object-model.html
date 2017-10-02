@@ -1,0 +1,37 @@
+<!-- 8.1.2 -->
+<html>
+    <head>
+        <title>Frameset Example</title>
+    </head>
+    <frameset row="160,*">
+        <frame src="frame.htm" name="topFrame">
+        <frameset col="50%,50%">
+            <frame src="anotherframe.htm" name="leftFrame">
+            <frame src="yetanotherframe.htm" name="rightFrame">
+        </frameset>
+    </frameset>
+</html>
+
+<!-- 框架内包含框架 -->
+<html>
+    <head>
+        <title>Frameset Example</title>
+    </head>
+    <framset row="100,*">
+        <frame src="fram.htm" name="topFrame">
+        <frameset cols="50%,50%">
+            <frame src="anotherframe.htm" name="leftFrame">
+            <frame src="anotherframeset.htm" name="rightFrame">
+        </framest>
+    </framset>
+</html>
+<!-- 上面框架内包含一个 htm 文件里的代码 -->
+<html>
+    <head>
+        <title>Frameset Example</title>
+    </head>
+    <frameset cols="50%,50%">
+        <frame src="red.htm" name="redFrame">
+        <frame src="blue.htm" name="blueFrame">
+    </frameset>
+</html>
