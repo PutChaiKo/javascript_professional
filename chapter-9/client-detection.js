@@ -93,9 +93,9 @@
     // 9.2 怪癖检测
 
         /*
-         *IE8 及更早版本中存在一个 bug，
-         *即如果某个实例属性与[[Enumerable]]标记为 false 的某个原型属性同名，
-         *那么该实例属性将不会出现在fon-in 循环当中。
+         * IE8 及更早版本中存在一个 bug，
+         * 即如果某个实例属性与[[Enumerable]]标记为 false 的某个原型属性同名，
+         * 那么该实例属性将不会出现在fon-in 循环当中。
          */
 
         var hasDontEnumQuirk = function()
