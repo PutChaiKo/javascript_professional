@@ -524,3 +524,57 @@
 
         // 10.2.2 动态样式
             // <link rel="stylesheet" type="text/css" href="styles.css">
+                // <link rel="stylesheet" type="text/css" href="style.css"
+                // DOM 代码创建
+                var link = document.createElement("link");
+                link.rel = "stylesheet";
+                link.type = "text/css";
+                link.href = "style.css";
+                var head = document.getElementsByTagName("head")[0];
+                head.appendChild(link); // 必须要放在 head
+
+                // 函数封装
+                function loadStyles(url) {
+                    var link = document.createElement("link");
+                    link.type = "stylesheet";
+                    link.href = url;
+                    var head = document.getElementsByTagName("head")[0];
+                    head.appendChild(link);
+                }
+
+                // 调用
+                loadStyles("style.css");
+
+                // 外部样式调用是异步的
+
+
+            // 10.2.3 操作表格
+                // <table>见隔壁，DOM创建
+                // 创建 table
+                var table = document.createElement("table");
+                table.border = 1;
+                table.width = "100%";
+
+                // 创建 tbody
+                var tbody = document.createElement("tbody");
+                table.appendChild(tbody);
+
+                // 创建第一行
+                var row1 = document.createElement("tr");
+                tbody.appendChild(row1);
+                var cell1_1 = document.createElement("td");
+                cell1_1.appendChild(document.createTextNode("Cell 1,1"));
+                row1.appendChild(cell1_1);
+                var cell2_1 = document.createElement("td");
+                cell2_1.appendChild(document.createTextNode("Cell 2,1"));
+                row1.appendChild(cell2_1);
+
+                // 创建第二行
+                var row1 = document.createElement("tr");
+                tbody.appendChild(row1);
+                var cell1_1 = document.createElement("td");
+                cell1_1.appendChild(document.createTextNode("Cell 1,1"));
+                row1.appendChild(cell1_1);
+                var cell2_1 = document.createElement("td");
+                cell2_1.appendChild(document.createTextNode("Cell 2,1"));
+                row1.appendChild(cell2_1);
