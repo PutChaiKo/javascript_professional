@@ -18,7 +18,7 @@
             var ems = document.getElementById("myDiv").querySelectorAll("em");
 
             // class "selected"
-            var = selected = document.querySelectorAll(".selected");
+            var selected = document.querySelectorAll(".selected");
 
             // <p> 元素中 <strong>
             var strongs = document.querySelectorAll("p strong");
@@ -155,3 +155,49 @@
                     var head = document.head || document.getElementByTagname("head")[0];
 
             // 11.3.4 字符集属性
+                // charest 属性查看文档使用的字符集及设置字符集
+                console.log(document.charest);
+                document.charest = "UTF-16";
+
+                // defaultCharset 属性，默认的字符集设置
+                if (document.charest != document.defaultCharset)
+                {
+                    console.log("Custom character set being used.");
+                }
+
+            // 11.3.5 自定义数据属性
+                // <div id="myDiv" data-appId="12345" data-myname="Nicholas"></div>
+                var div = document.getElementById("myDiv");
+
+                // 取得自定义属性的值
+                var appId = div.dataset.appId;
+                var myName = div.dataset.myname;
+
+                // 设置值
+                div.dataset.appId = 23456;
+                div.dataset.myname = "Michael";
+
+                // 查询值
+                if (div.dataset.myname)
+                {
+                    console.log("Hello, " + div.dataset.myname);
+                }
+
+                // 部分浏览器支持
+
+            // 11.3.6 插入标记
+                // 1.innerHTML
+                    // 见隔壁
+                    // 设置字符串
+                    div.innerHTML = "Hello world!";
+
+                    // 设置值的解析值不同
+
+                // 2.outerHTML
+                    // 读模式下读取上述 HTML 会返回一模一样的代码
+                    // 设置值
+                    div.outerHTML = "<p>This is a paragraph.</p>";
+
+                    // 与下属代码相同
+                    var p = document.createElement("p");
+                    p.appendChild(document.createTextNode("This is a paragraph."));
