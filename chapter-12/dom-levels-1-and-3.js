@@ -146,4 +146,45 @@
                 // 兼容 IE 可用下述代码
                 var parentWindow = document.defaultView || document.parentWindow;
 
-                
+            // 3. Node 类型的变化
+                // 添加了 isSupported() 方法
+                // 用于确定当前节点具有什么能力，两个参数：特性名，特性版本号
+                // 与 DOM Level 1 为 document.implementation 引入的 hansFeature() 方法类似
+                if (document.body.isSupported("HTML", "2.0"))
+                {
+                    // 执行只有 DOM Level HTML 才支持的操作
+                }
+
+                // 建议使用能力检测
+
+                // DOM Level 3 引入的节点辅助方法，isSameNode() isEqualNode()
+                // 接受一个节点参数，判断其相同或相等
+
+                var div1 = document.createElement("div");
+                div1.setAttribute("class", "box");
+
+                var div2 = document.createElement("div");
+                div2.setAttribute("class", "box");
+
+                console.log(div1.isSameNode(div1));     // true
+                console.log(div1.isEqualNode(div2));    // true
+                console.log(div1.isSameNode(div2));     // false
+
+                // DOM Level 3 为 DOM 节点 添加额外数据的引入了新方法
+                // setUserData() 方法会将数据制定给节点
+
+                document.body.setUserData("name", "Nicholas", function(){});
+                var value = document.body.getUserData("name");
+
+                // 例子
+                var div = document.createElement("div");
+                div.setUserData("name", "Nicholas", function(opearation, key, value, src, dest) {
+                    if (opearation == 1) {
+                        dest.setUserData(key, value, function() {});
+                    }
+                });
+
+                var newDiv = div.cloneNode(true);
+                console.log(newDiv.getUserdata("name"));
+
+            // 4.框架的变化
