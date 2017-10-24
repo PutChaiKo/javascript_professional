@@ -315,3 +315,22 @@
              * parentStyleSheet 在当前样式表是通过 @import 导入的情况下，这个属性是一个指向导入它的样式表的指针
              * title ownerNode 中 title 属性的值
              * ***********************/
+
+
+
+            // 1. CSS 规则
+                // CSSRule 对象表示样式表中的每一条规则，可供多种类型继承的继承的基类
+                /* 常见的为 CSSStyleRule 对象，包含下列属性
+                 * cssText 返回整条规则对应的文本
+                 * parentRule 如果当前规则是导入规则，这个属性引用的就是导入规则，否则是 null
+                 * selectorText 返回符合当前规则的选择符文本
+                 * style 一个 CSSStyleDeclaration 对象，可以通过它设置和取得规则中特定的样式值
+                 * type 表示规则类型的常量值
+                 */
+
+                // div.box {background-color: blue;width: 100px;height:200px;}
+                // 如果这条规则位于页面的第一个样式表中，而且只有这么一个样式表
+                var sheet = document.styleSheet[0];
+                var rule = sheet.cssRule || sheet.rules;    // 取得规则列表
+                var rule = rules[0];
+                console.log(rule.selectorText);             // div.box
