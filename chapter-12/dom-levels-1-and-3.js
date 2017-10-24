@@ -330,7 +330,11 @@
 
                 // div.box {background-color: blue;width: 100px;height:200px;}
                 // 如果这条规则位于页面的第一个样式表中，而且只有这么一个样式表
-                var sheet = document.styleSheet[0];
-                var rule = sheet.cssRule || sheet.rules;    // 取得规则列表
+                var sheet = document.styleSheets[0];
+                var rules = sheet.cssRules || sheet.rules;    // 取得规则列表
                 var rule = rules[0];
                 console.log(rule.selectorText);             // div.box
+                console.log(rule.style.cssText);            // 完整的 CSS 代码
+                console.log(rule.style.backgroundColor);    // blue
+                console.log(rule.style.width);              // 100px
+                console.log(rule.style.height);             // 200px
