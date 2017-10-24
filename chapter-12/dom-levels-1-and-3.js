@@ -149,7 +149,7 @@
             // 3. Node 类型的变化
                 // 添加了 isSupported() 方法
                 // 用于确定当前节点具有什么能力，两个参数：特性名，特性版本号
-                // 与 DOM Level 1 为 document.implementation 引入的 hansFeature() 方法类似
+                // 与 DOM Level 1 为 document.implementation 引入的 hasFeature() 方法类似
                 if (document.body.isSupported("HTML", "2.0"))
                 {
                     // 执行只有 DOM Level HTML 才支持的操作
@@ -188,3 +188,130 @@
                 console.log(newDiv.getUserdata("name"));
 
             // 4.框架的变化
+                // 表示框架 HTMLFrameElement，表示内嵌框架 HTMLIFrameElement
+                // DOM Level2 中拥有一个新属性 contentDocument，拥有指针指向框架内容的文档对象
+
+                var iframe = document.getElementById("myIframe");
+                var iframeDoc = iframe.contentDocument;     // IE 8 前无效
+
+                // 兼容性代码
+                var iframe = document.getElementById("myFrame");
+                var iframeDoc = iframe.contentDocument || iframe.contentDocument.document;
+
+    // 12.2 样式
+        // 确认浏览器是否支持 DOM Level 2 的 CSS 能力
+        var supportsDOM2CSS = document.implementation.hasFeature("CSS", "2.0");
+        var supportsDOm2CSS2 = document.implementation.hasFeature("CSS2", "2.0");
+
+        // 12.2.1 访问元素的样式
+            /* CSS 属性               JavaScript 属性
+             * background-image     style.backgroundImage
+             * color                style.color
+             * display              style.display
+             * font-family          style.fontFamily
+             * float                style.cssFloat  IE styleFloat
+             */
+
+            // 例子
+            var myDiv = document.getElementById("myDiv");
+
+            // 设置背景颜色
+            myDiv.style.backgroundColor = "red";
+
+            // 改变大小
+            myDiv.style.width = "100px";
+            myDiv.style.height = "200px";
+
+            // 指定边框
+            myDiv.style.border = "1px solid black";
+
+            // 取得样式
+            console.log(myDiv.style.backgroundColor);
+            console.log(myDiv.style.width);
+            console.log(myDiv.style.height);
+
+            // 1. DOM 样式属性和方法
+                /* DOM Level 2 为 style 对象定义了一些属性和方法
+                 * cssText 访问 style 特性中的代码
+                 * length 应用给元素的 CSS 属性的数量
+                 * parentRule 表示 CSS 信息的 CSSRule 对象
+                 * getPropertyCssValue(propertyName) 返回包含特定值的 CSSValue 对象
+                 * getPropertyPriority(propertyName) 如果给定的属性使用了 !important 设置，则返回"important"，否则返回空字符串
+                 * getPropertyValue(propertyName) 返回给定属性的字符串值
+                 * item(index) 返回给定位置的 CSS 的名称
+                 * removeProperty(propertyName) 从样式中删除给定属性
+                 * setProperty(propertyName, value, priority) 将给定属性设定为相应的值，并加上优先权标志
+                 */
+
+                myDiv.style.cssText = "width: 25px; height: 100px; background-color: green";
+                console.log(myDiv.style.cssText);
+
+                // length 属性
+                for (var i = 0, len = myDiv.style.length; i < len; i++)
+                {
+                    console.log(myDiv.style[i]);    // 取得的是 background-color 类型的属性名
+                    //myDiv.style.item(i);
+                }
+
+                // 取得属性值
+                var prop,
+                    value,
+                    i,
+                    len;
+
+                for (i = 0, len = myDiv.style.length; i < len; i++)
+                {
+                    prop = myDiv.style[i];
+                    // prop = myDiv.style.item(i);
+                    value = myDiv.style.getPropertyValue(prop);
+                    console.log(prop + " : " + value);
+                }
+
+                // 值的类型，0：继承值，1：基本值，2：值列表， 3：自定义值
+                var prop,
+                    value,
+                    i,
+                    len;
+                for (i = 0, len = myDiv.style.length; i < len; i++) {
+                    prop = myDiv.style[i];
+                    // prop = myDiv.style.item(i);
+                    value = myDiv.style.getPropertyCssValue(prop);
+                    console.log(prop + " : " + value.cssText + " (" + value.cssValueType +")");
+                }
+
+                // 移除 CSS 属性
+                myDiv.style.removeProperTy("border");
+
+            // 2.计算的样式
+                // DOM Level 2 Style 增强了 document.defaultView
+                // getComputedStyle() 接受要计算样式的元素和一个伪元素字符串（不需要用 null 代替）；
+                var myDiv = document.getElementById("myDiv");
+                var computedStyle = document.defaultView.getComputedStyle(myDiv, null);
+                console.log(computedStyle.backgroundColor);
+                console.log(computedStyle.width);
+                console.log(computedStyle.border); // 每个浏览器不同
+
+                // IE 兼容
+                var myDiv = document.getElementById(myDiv);
+                var computedStyle = myDiv.currentStyle;
+                console.log(computedStyle.backgroundColor);
+                console.log(computedStyle.width);
+                console.log(computedStyle.border); // undefined
+
+                // 计算样式表是只读的
+                // 包含浏览器的默认值
+                // 每个浏览器的默认值是不同的
+
+        // 12.2.2 操作样式表
+            // 检测是否支持 DOM Level 2 StyleSheets
+            var supportsDOM2StyleSheets = document.implementation.hasFeature("StyleSheets", "2.0");
+
+            /* CSSStyleSheet 继承自 StyleSheets
+             * 属性如下
+             * disabled 表示样式表是否被禁用的布尔值，读写，设置为 true 可以禁用
+             * href 如果样式表是通过<link>包装的，则是样式表的 URL 否则是 null
+             * media 当前样式表支持的所有媒体类型的集合
+             * ownerNode 指向拥有当前样式表的节点的指针
+             * parentStyleSheet 在当前样式表是通过 @import 导入的情况下，这个属性是一个指向导入它的样式表的指针
+             * title ownerNode 中 title 属性的值
+             * ***********************/

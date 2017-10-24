@@ -7,3 +7,5 @@
         var value = document.body.getUserData("name");
 
         //以上代码无法在 chrome 运行
+
+        // chrome 表示  myDiv.style.getPropertyCssValue is not a function
