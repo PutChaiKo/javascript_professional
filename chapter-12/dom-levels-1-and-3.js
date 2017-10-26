@@ -397,4 +397,29 @@
                 // 慎用上述方法
 
         // 12.2.3 元素大小
-        
+            // 1.偏移量
+                function getElementLeft(element)
+                {
+                    var actualLeft = element.offsetLeft;
+                    var current = element.offsetParent;
+
+                    while (current !== null)
+                    {
+                        actualLeft += current.offsetLeft;
+                        current = current.offsetParent;
+                    }
+                    return actualLeft;
+                }
+
+                function getElementTop(element)
+                {
+                    var actualTop = element.offsetTop;
+                    var current = element.offsetParent;
+
+                    while (current !== null)
+                    {
+                        actualTop += current.offsetTop;
+                        current = current.offsetParent;
+                    }
+                    return actualTop;
+                }
