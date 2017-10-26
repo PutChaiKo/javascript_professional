@@ -338,3 +338,63 @@
                 console.log(rule.style.backgroundColor);    // blue
                 console.log(rule.style.width);              // 100px
                 console.log(rule.style.height);             // 200px
+
+                // 修改样式
+                var sheet = document.styleSheets[0];
+                var rules = sheet.cssRules || sheet.rules;  // 取得规则列表
+                var rule = rule[0];
+                rule.style.backgroundColor = "red";
+
+
+            // 2.创建规则
+                // DOM 规定，要使用 insertRule();添加新规则至现有的样式表
+                // 接受两个参数：规则文本和表示在哪里插入规则的索引
+                sheet.insertRule("body{background-color: silver}", 0);  // DOM 方法
+                // 规则为改变背景颜色，插入后成为样式表的第一条规则。
+
+                // IE 兼容
+                sheet.addRule("body", "background-color: silver", 0);   // 仅对 IE 有效
+
+                // 跨浏览器加入规则
+                function insertRule(sheet, selectorText, cssText, position)
+                {
+                    if (sheet.insertRule)
+                    {
+                        sheet.insertRule(selectorText + "{" + cssText + "}", position);
+                    }
+                    else if (sheet.addRule)
+                    {
+                        sheet.addRule(selectorText, cssText, position);
+                    }
+                }
+
+                // 调用
+                insertRule(document.styleSheets[0], "body", "background-color: silver", 0);
+                // 建议使用10章动态加载样式表的技术
+
+            // 3.删除规则
+                // deleteRule()，一个参数，要删除规则的位置
+                sheet.deleteRule(0);     // DOM 方法删除样式表中第一条规则
+                // IE 兼容
+                sheet.removeRule(0);    // 仅对 IE 有效
+
+                // 跨浏览器
+                function deleteRule(sheet, index)
+                {
+                    if (sheet.deleteRule)
+                    {
+                        sheet.deleteRule(index);
+                    }
+                    else if (sheet.removeRule)
+                    {
+                        sheet.removeRule(index);
+                    }
+                }
+
+                // 调用
+                deleteRule(document.styleSheets[0], 0);
+
+                // 慎用上述方法
+
+        // 12.2.3 元素大小
+        
