@@ -398,15 +398,15 @@
 
         // 12.2.3 元素大小
             // 1.偏移量
-                function getElementLeft(element)
+                function getElementLeft(element)    // 传入参数元素
                 {
-                    var actualLeft = element.offsetLeft;
-                    var current = element.offsetParent;
+                    var actualLeft = element.offsetLeft;    // 定义变量为至包围的左长度
+                    var current = element.offsetParent;     // 指向包围元素
 
-                    while (current !== null)
+                    while (current !== null)    // 如果存在包围元素
                     {
-                        actualLeft += current.offsetLeft;
-                        current = current.offsetParent;
+                        actualLeft += current.offsetLeft;   // 变量为已有长度加上包围元素的做长度
+                        current = current.offsetParent;     // 变量为上一级包围元素
                     }
                     return actualLeft;
                 }
@@ -422,4 +422,68 @@
                         current = current.offsetParent;
                     }
                     return actualTop;
+                }
+
+            // 2.客户区大小
+                // 获取视窗大小
+                function getViewport()
+                {
+                    if (document.compatMode == "BackCompat")    // 先检测是否运行在混杂模式
+                    {
+                        return {
+                            width: document.body.clientWidth,
+                            height: document.body.clientHeight
+                        };
+                    }
+                    else    // 大部分为标准模式和 Safari 3.1 之前会进行到这个里面
+                    {
+                        return {
+                            width: document.documentElement.clientWidth,
+                            height: document.documentElement.clientHeight
+                        }
+                    }
+                }
+
+            // 3.滚动大小
+                // 带有垂直滚动条的页面总高度
+                document.documentElement.scrollHeight
+                // 不含滚动条的页面
+                var docHeight = Math.max(document.documentElement.scrollHeight,
+                                        document.documentElement.clientHeight);
+                var docWidth = Math.max(document.documentElement.scrollWidth,
+                                        document.documentElement.cilentWidth);
+                // IE 混杂模式需要用 document.body 代替
+
+                // 重置页面位置
+                function scrollToTop(element)
+                {
+                    if (element.scrollTop != 0)
+                    {
+                        element.scrollTop = 0;
+                    }
+                }
+
+            // 4.确定元素大小
+                function getBoundingClientRect(element)
+                {
+                    if (typeof arguments.callee.offset != "number") // arguments.callee 指向当前的引用
+                    {
+                        var scrollTop = document.documentElement.scrollTop;
+                        var temp = document.create.createElement("div");
+                        temp.style.cssText = "position:absolute;left:0;top:0;";
+                        document.body.appendChild(temp);
+                        arguments.callee.offset = -temp.getBoundingClientRect().top - scrollTop;
+                        document.body.removeChild(temp);
+                        temp = null;
+                    }
+
+                    var rect = element.getBoundingClientRect();
+                    var offset = arguments.callee;
+
+                    return {
+                        left: rect.left + offset,
+                        right: rect.right + offset,
+                        top: rect.top + offset,
+                        bottom: rect.bottom + offset
+                    };
                 }
