@@ -1,0 +1,29 @@
+<!-- 13 -->
+    <!-- 13.2 -->
+        <!-- 13.2.1 -->
+            <input type="button" value="Click Me" onclick="alert('Clicked')" />
+
+            <script type="text/javascript">
+                function showMessage() {
+                    alert("Hello world");
+                }
+            </script>
+            <input type="button" name="" value="Click Me" onclick="showMessage()" />
+
+            <!-- 输出“点我” -->
+            <input type="button" name="" value="点我" onclick="alert(event.type)">
+
+            <!-- 输出点我 -->
+            <input type="button" name="" value="点我" onclick="alert(this.value)">
+
+            <input type="button" name="" value="Click Me" onclick="alert(value)">
+            <form method="post">
+                <input type="text" name="username" value="">
+                <input type="button" value="Ecoh Uersname" onclick="alert(username.value)">
+            </form>
+
+            <!-- HTML 事件封装至 try-catch块中避免错误弹出 -->
+            <input type="button" name="" value="Click Me" onclick="try{showMessage();}catch(ex){}">
+
+        <!-- 13.2.2 -->
+            
